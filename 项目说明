@@ -1,0 +1,102 @@
+采用springboot前后端分离。主要就是普通的商城业务代码。
+mysql做数据库，用lua脚本操作redis，lua脚本原子性保证系统安全。
+购物车信息存在redis里，商品详情页也存在redis里。
+数据库表信息：
+CREATE TABLE `account` (
+	`userid` INT(11) NOT NULL AUTO_INCREMENT,
+	`username` VARCHAR(80) NOT NULL,
+	`password` VARCHAR(60) NOT NULL,
+	`email` VARCHAR(80) NOT NULL,
+	`xm` VARCHAR(80) NOT NULL,
+	`address` VARCHAR(40) NULL DEFAULT NULL,
+	PRIMARY KEY (`userid`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=30
+;
+
+CREATE TABLE `cart` (
+	`userid` INT(11) NOT NULL,
+	`orderid` INT(11) NOT NULL,
+	`itemid` INT(11) NOT NULL,
+	`quantity` INT(11) NULL DEFAULT NULL,
+	PRIMARY KEY (`userid`, `orderid`, `itemid`),
+	INDEX `itemid` (`itemid`),
+	INDEX `orderid` (`orderid`),
+	INDEX `userid` (`userid`),
+	CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `account` (`userid`),
+	CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`itemid`) REFERENCES `item` (`itemid`),
+	CONSTRAINT `cart_ibfk_3` FOREIGN KEY (`orderid`) REFERENCES `orders` (`orderid`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `category` (
+	`catid` INT(11) NOT NULL,
+	`catno` VARCHAR(40) NULL DEFAULT NULL,
+	`name` VARCHAR(40) NULL DEFAULT NULL,
+	`desn` VARCHAR(80) NULL DEFAULT NULL,
+	PRIMARY KEY (`catid`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `item` (
+	`itemid` INT(11) NOT NULL,
+	`itemno` VARCHAR(30) NULL DEFAULT NULL,
+	`productid` INT(11) NULL DEFAULT NULL,
+	`listprice` FLOAT NULL DEFAULT NULL,
+	`attr1` VARCHAR(50) NULL DEFAULT NULL,
+	PRIMARY KEY (`itemid`),
+	INDEX `productid` (`productid`),
+	CONSTRAINT `item_ibfk_1` FOREIGN KEY (`productid`) REFERENCES `product` (`productid`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `orders` (
+	`userid` INT(11) NOT NULL,
+	`orderid` INT(11) NOT NULL,
+	`orderdate` DATE NULL DEFAULT NULL,
+	`totalprice` FLOAT NULL DEFAULT NULL,
+	PRIMARY KEY (`userid`, `orderid`),
+	INDEX `orderid` (`orderid`),
+	CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `account` (`userid`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `product` (
+	`productid` INT(11) NOT NULL,
+	`productno` VARCHAR(30) NOT NULL,
+	`catid` INT(11) NULL DEFAULT NULL,
+	`name` VARCHAR(30) NULL DEFAULT NULL,
+	`descn` VARCHAR(50) NULL DEFAULT NULL,
+	`pic` VARCHAR(30) NULL DEFAULT NULL,
+	PRIMARY KEY (`productid`),
+	INDEX `catid` (`catid`),
+	CONSTRAINT `product_ibfk_1` FOREIGN KEY (`catid`) REFERENCES `category` (`catid`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `profile` (
+	`userid` INT(11) NOT NULL,
+	`lang` VARCHAR(80) NOT NULL,
+	`catid` INT(11) NOT NULL,
+	PRIMARY KEY (`userid`),
+	INDEX `catid` (`catid`),
+	CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `account` (`userid`),
+	CONSTRAINT `profile_ibfk_2` FOREIGN KEY (`catid`) REFERENCES `category` (`catid`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+
+
