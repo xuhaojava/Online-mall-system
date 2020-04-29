@@ -1,0 +1,40 @@
+【Create table】
+1.account 【M】
+  userid pk auto 用户id
+  username varchar 用户姓名
+  password varchar 密码
+  email varchar 邮箱
+  xm varchar 姓名
+  address varchar 地址
+2.profile  【S】
+  userid pk 用户id fk【account】【OTO】
+  lang varchar 你的母语 eng chi
+  catid int 你喜爱的宠物 fk【category】【OTM】
+3.category 宠物种类表
+  catid：int pk 宠物id
+  catno：varchar 宠物序号
+  name：宠物种类名称
+  descn：宠物描述
+4.product 产品表
+  productid 产品id pk
+  productno 产品NO
+  catid 所属宠物种类 fk category catid OTM
+  name:产品名称
+  descn：产品描述
+  pic:产品图片
+5.item 项目表
+  itemid：项目id pk
+  itemno:项目序号
+  productid：所属产品 fk product productid OTM
+  listprice:单价
+  attr1:项目描述
+6.order 订单表
+  userid：那个人的 PK FK account userid
+  orderid:订单编号 PK
+  orderdate：订单已经交钱后的日期 【如果为null，可以继续购物】
+  totalprice:该订单的总价【当为null时，代表还没有购完】
+7.cart 购物车
+  userid 用户的ID pk fk  account userid
+  orderid 订单id pk fk orders orderid
+  itemid 项目id pk fk item itemid
+  quantity 当前购买宠物的数量

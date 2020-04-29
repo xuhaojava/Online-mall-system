@@ -1,0 +1,85 @@
+<table bgcolor="#5A8C29" border="12" cellspacing="2"
+       cellpadding="0" width="10%">
+    <tr>
+        <td>
+            <table bgcolor="#FFFF88" border="0" cellspacing="0"
+                   cellpadding="5" width="200">
+                <tbody>
+
+                <tr>
+                    <td>
+                        <b><i><font size="2" color="BLACK">欢迎<span id="name">游客</span></font></i></b>
+                    </td>
+                </tr>
+                <script>
+
+                    $(function () {
+                        var QUERY_COOKIE_URL="http://localhost:8080/account/queryCookie"
+                        $.ajax({
+                            url:QUERY_COOKIE_URL,
+                            type:"get",
+                            dataType:"text",
+                            statusCode:{
+                                200:function (data) {
+                                    $("#name").html(data.indexOf("-1")>=0?"游客":data);
+                                },
+                            }
+                        })
+                    });
+                </script>
+                <tr>
+                    <td>
+                        <a href="product.html?cate=4">
+                            <img
+                                    border="0" src="../images/fish_icon.gif"/>
+                        </a>
+
+                        <br>
+                        <font size="2"><i></i>
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="product.html?cate=3"><img
+                                border="0" src="../images/dogs_icon.gif"/>
+                        </a>
+                        <br>
+                        <font size="2"><i></i>
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="product.html?cate=2"><img
+                                border="0" src="../images/cats_icon.gif"/>
+                        </a>
+                        <br>
+                        <font size="2"><i></i>
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="product.html?cate=5"><img
+                                border="0" src="../images/reptiles_icon.gif"/>
+                        </a>
+                        <br>
+                        <font size="2"><i></i>
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="product.html?cate=1"><img
+                                border="0" src="../images/birds_icon.gif"/>
+                        </a>
+                        <br>
+                        <font size="2"><i></i>
+                        </font>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+

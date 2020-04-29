@@ -1,0 +1,195 @@
+<html>
+<head>
+    <TITLE></TITLE>
+    <META content="text/html; charset=utf-8" http-equiv=Content-Type>
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/top.js"></script>
+    <script src="../js/verify.js"></script>
+
+    <script>
+        var sum = 0;
+        var QUERY_CART_URL = "http://localhost:8080/cart/querycart"
+        $(function () {
+            $.ajax({
+                url: QUERY_CART_URL,
+                type: "get",
+                dataType: "text json",
+                statusCode: {
+                    200: function (data) {
+
+                        var s = "";
+                        var qsum = 0;
+                        $(data).each(function (index, val) {
+                            s+="<tr bgcolor='#FFFF88'>" +
+                                "<td><a href=''>"+val.item.itemno+"</a> </td>"+
+                                "<td>"+val.item.product.productno+"</td>"+
+                                "<td>"+val.item.product.descn+"</td>"+
+                                "<td>"+val.item.attr1+"</td>"+
+                                "<td>"+val.item.listprice+"</td>"+
+                                "<td><input type='number' value='"+val.quantity+"' max='100' min='1' onchange='change("+val.itemid+",this)'/></td>"+
+                                "<td>"+(val.quantity)*(val.item.listprice)+"</td>"+
+                                "<td><image src='../images/"+val.item.product.pic+"'/></td>"+
+                                "<td><input type='image' src='../images/button_remove.gif' onclick='del("+val.itemid+")'/></td>"
+                                "</tr>"
+                                sum+=val.quantity*val.item.listprice;
+                                qsum+=val.quantity;
+                        });
+                        s+="<tr bgcolor='#FFFF88'><td colspan='5'></td><td>"+qsum+"</td><td><b>总计："+sum+"</b><td colspan='2'></td></td>"
+                        $("#cart>tbody").append(s);
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        });
+        function change(iid,self) {
+            var q = self.value;
+            if(!verify1()){
+                var PUT_CART_URL = "http://localhost:8080/cart/put/" + iid+"/"+q;
+                $.ajax({
+                    url: PUT_CART_URL,
+                    type: "put",
+                    statusCode: {
+                        200: function (data) {
+                            //后端删完购物车之后需要刷新页面。
+                            window.location="cart.html"
+                        }
+
+                    }
+                });
+            }else {
+                alert("请先登录")
+                window.location="login.html"
+            }
+
+        }
+
+
+        function del(iid) {
+            if(!verify1()){
+                var DELETE_CART_URL = "http://localhost:8080/cart/del/" + iid;
+                $.ajax({
+                    url: DELETE_CART_URL,
+                    type: "delete",
+                    statusCode: {
+                        200: function (data) {
+                            //后端删完购物车之后需要刷新页面。
+                            window.location="cart.html"
+                        }
+
+                    }
+                });
+            }else {
+                alert("请先登录")
+                window.location="login.html"
+            }
+
+        }
+
+
+    </script>
+</head>
+<body>
+<div id="top"></div>
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+        <td valign="top" width="5%" align="left">
+            <table align="left" bgcolor="#008800" border="0" cellspacing="2"
+                   cellpadding="2">
+                <tr>
+                    <td bgcolor="#FFFF88">
+                        <a href="main.html"><b><font color="BLACK" size="2">&lt;&lt;主菜单</font>
+                        </b></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td valign="top" align="center">
+            <h2 align="center">
+                购物车
+            </h2>
+            <table align="center" bgcolor="#008800" border="0" cellspacing="2"
+                   cellpadding="5" id="cart">
+                <tbody>
+                <tr bgcolor="#cccccc">
+                    <td>
+                        项目编号
+                    </td>
+                    <td>
+                        产品编号
+                    </td>
+                    <td>
+                        产品描述
+                    </td>
+                    <td>
+                        项目描述
+                    </td>
+                    <td width="100">
+                        单价
+                    </td>
+                    <td>
+                        数量
+                    </td>
+                    <td>
+                        合计
+                    </td>
+                    <td>
+                        图片
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <center>
+
+
+            </center>
+            </form>
+
+
+            <br />
+            <center>
+                <input type="image" id="checkout"
+                       src="../images/button_checkout.gif" />
+
+            </center>
+
+
+        </td>
+
+
+
+
+    </tr>
+    <script>
+        $("#checkout").click(function () {
+
+            if(verify1()){//加入购物车时是游客，需要返回登录
+                window.location="login.html"
+                return;
+            }
+            var CHECKOUT_URL = "http://localhost:8080/cart/checkout/"+sum;
+            $.ajax({
+                url:CHECKOUT_URL,
+                dataType:"text",
+                type:"post",
+                statusCode:{
+                    200:function (data) {
+                        window.location="main.html";
+                    }
+                }
+            })
+
+
+        })
+    </script>
+    </table>
+
+<br>
+</body>
+</html>

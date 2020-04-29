@@ -1,0 +1,63 @@
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/verify.js"></script>
+   	<TABLE background="../images/bkg-topbar.gif" border=0 cellSpacing=0
+			cellPadding=5 width="100%">
+			<TBODY>
+				<TR>
+					<TD>
+						<A href=""><IMG border=0
+								src="../images/logo-topbar.gif">
+						</A>
+					</TD>
+
+					<TD align=right >
+						<input type="image" src="../images/cart.gif" id="cart">
+						<script>
+							$(function () {
+								$("#cart").click(function () {
+									verify();
+                                });
+                            });
+						</script>
+						<IMG border=0 src="../images/separator.gif">
+						<a href="../shop/init.html"><IMG border=0 src="../images/init.gif"></a>
+						<IMG border=0 src="../images/separator.gif">
+						<a href="../shop/login.html"><IMG border=0 src="../images/sign-in.gif"></a>
+						<IMG border=0 src="../images/separator.gif">
+						<a href="../shop/register.html"><IMG border=0 src="../images/REG.gif"></a>
+						<IMG border=0 src="../images/separator.gif">
+						<input type="image" src="../images/sign-out.gif" id="out">
+					</TD>
+					<script>
+						$(function () {
+							$("#out").click(function () {
+								var OUT_URL="http://localhost:8080/account/out"
+								$.ajax({
+									url:OUT_URL,
+									type:"get",
+									statusCode:{
+									    200:function () {
+											alert("退出成功")
+											window.location="../shop/main.html"
+                                        }
+									}
+								})
+
+                            })
+                        })
+
+					</script>
+				</TR>
+			</TBODY>
+		</TABLE>
+		<center>
+			<a href=""><img border="0" src="../images/sm_fish.gif" /></a>
+			<img border="0" src="../images/separator.gif" />
+			<a href=""><img border="0" src="../images/sm_dogs.gif" /></a>
+			<img border="0" src="../images/separator.gif" />
+			<a href=""><img border="0" src="../images/sm_reptiles.gif" /></a>
+			<img border="0" src="../images/separator.gif" />
+			<a href=""><img border="0" src="../images/sm_cats.gif" /></a>
+			<img border="0" src="../images/separator.gif" />
+			<a href=""><img border="0" src="../images/sm_birds.gif" /></a>
+		</center>

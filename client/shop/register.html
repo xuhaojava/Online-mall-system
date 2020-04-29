@@ -1,0 +1,249 @@
+<html>
+<head>
+	<TITLE></TITLE>
+	<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/top.js"></script>
+	<script src="../js/tojson.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			var QUERY_CATEGORY_URL="http://localhost:8080/pet/queryCategory"
+			$.ajax({
+				url:QUERY_CATEGORY_URL,
+				type:"get",
+				dataType:"text json",
+				statusCode:{
+					200:function (data) {
+					    $("#category").empty();
+					    var str = "";
+						$(data).each(function (index,val) {
+							str+= "<option value='"+ val.catid+"'>"+val.name+"</option>"
+                        });
+						$("#category").append(str);
+                    },
+                    404:function () {
+
+                    }
+
+
+				}
+
+
+			})
+
+            $("#username").change(function () {
+                var username = $("#username").val();
+                var QUERY_ACCOUNT_URL="http://localhost:8080/account/verify/"+username;
+                $.ajax({
+                    url:QUERY_ACCOUNT_URL,
+                    type:"get",
+                    statusCode:{
+                        200:function () {
+
+                        },//校验输入的用户名是否重复，如果不重复不需要在前端操作
+                        302:function () {//校验输入的用户名是否重复，如果重复需要提示
+                            alert("用户名重复")
+                        }
+                    }
+
+
+                });
+
+            });
+
+			$("#myok").click(function () {
+				var username=$("#username").val();
+
+                var password=$("#password").val();
+
+                var repassword=$("#repassword").val();
+
+                var email=$("#email").val();
+
+				if(username==""||username.length<=0){
+					alert("用户名不能为空");
+					return;
+				}
+                if(password==""||password.length<=0){
+                    alert("密码不能为空");
+                    return;
+                }
+                if(repassword==""||repassword.length<=0){
+                    alert("请再次输入密码");
+                    return;
+                }
+                if(password!=repassword){
+					alert("两次输入密码不一致，请重新输入");
+					return;
+				}
+                if(email==""||email.length<=0){
+                    alert("邮箱不能为空");
+                    return;
+                }else{
+                    var reg = /^[A-Za-z0-9._%-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,4}$/;
+                    if(!reg.test(email)){
+						alert("邮箱格式错误");
+                        return;
+                    }
+				}
+                $.fn.serializeObject = function() {
+                    var o = {};
+                    var a = this.serializeArray();
+                    var regArray = /^([^\[\]]+)\[(\d+)\]$/;
+
+                    $.each(a, function(i) {
+                        var name = this.name;
+                        var value = this.value;
+
+                        // let's also allow for "dot notation" in the input names
+                        var props = name.split('.');
+                        var position = o;
+                        while (props.length) {
+                            var key = props.shift();
+                            var matches;
+                            if (matches = regArray.exec(key)) {
+                                var p = matches[1];
+                                var n = matches[2];
+                                if (!position[p]) position[p] = [];
+                                if (!position[p][n]) position[p][n] = {};
+                                position = position[p][n];
+                            } else {
+                                if (!props.length) {
+                                    if (!position[key]) position[key] = value || '';
+                                    else if (position[key]) {
+                                        if (!position[key].push) position[key] = [position[key]];
+                                        position[key].push(value || '');
+                                    }
+                                } else {
+                                    if (!position[key]) position[key] = {};
+                                    position = position[key];
+                                }
+                            }
+                        }
+                    });
+                    return o;
+                };
+			    var REG_ACCOUNT_URL = "http://localhost:8080/account/reg";
+				var d = JSON.stringify($("#form1").serializeObject());
+                $.ajax({
+					url:REG_ACCOUNT_URL,
+					type:"post",
+					data:d,
+					contentType:"application/json",
+					statusCode:{
+					    200:function () {//注册成功直接进入登录页面
+							window.location="login.html";
+                        }
+					}
+
+				})
+            });
+		});
+	</script>
+</head>
+<body>
+<div id="top"></div>
+<form id="form1">
+	<TABLE cellpadding=10 cellspacing=0 align=center border=1 width="400"
+		bgcolor=#dddddd>
+		<TR>
+			<TD>
+				<FONT color=darkgreen>
+					<H3>
+						基本信息
+					</H3>
+				</FONT>
+				<TABLE border=0  bgcolor=#FFFF88  width="100%">
+					<TR bgcolor=#FFFF88>						
+						<TD>
+							用&nbsp;&nbsp;户&nbsp;&nbsp;名：<input type="text" name="username" id="username">
+						</TD>
+					</TR>
+					<TR bgcolor=#FFFF88>
+						<TD>
+							密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：<input type="text" name="password" id="password">
+						</TD>
+					</TR>
+					<TR bgcolor=#FFFF88>
+						
+						<TD>
+							确认密码：<input type="text" name="repassword" id="repassword">
+						</TD>
+					</TR>
+				</TABLE>
+
+
+
+
+
+				<FONT color=darkgreen><H3>
+							附加信息
+					</H3>
+				</FONT>
+
+				<TABLE bgcolor="#FFFF88" border=0 
+					bgcolor=#FFFF88 width="100%">
+					<TR bgcolor=#FFFF88>
+						
+						<TD>
+							 邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：<input type="text" name="email" id="email">
+						</TD>
+					</TR>
+					
+					<TR bgcolor=#FFFF88>
+						
+						<TD>
+							 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：<input type="text" name="xm" id="xm">
+						</TD>
+					</TR>
+					
+					<TR bgcolor=#FFFF88>
+						
+						<TD>
+							地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：<input type="text" name="address" id="address">
+						</TD>
+					</TR>
+					
+					
+				</TABLE>
+
+
+				<FONT color=darkgreen><H3>
+						 爱好信息
+					</H3>
+				</FONT>
+
+				<TABLE bgcolor="#FFFF88" border=0 cellpadding=3 cellspacing=1 width="100%">
+					<TR bgcolor=#FFFF88>
+						
+						<TD>
+							语言：
+							<select name="profile.lang">
+								<option value="eng">
+									English
+								</option>
+								<option value="chi">
+									中文
+								</option>
+							</select>
+						</TD>
+					</TR>
+					<TR bgcolor=#FFFF88>
+						
+						<TD>
+							宠物：
+							<select name="profile.catid" id="category">
+							</select>
+						</TD>
+					</TR>
+					
+				</TABLE>
+	</TABLE>
+</form>
+	<BR/>
+	<CENTER>
+		<input border=0 type="image" src="../images/button_submit.gif" id="myok"/>
+	</CENTER>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<html>
+<head>
+    <TITLE></TITLE>
+    <META content="text/html; charset=utf-8" http-equiv=Content-Type>
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/top.js"></script>
+    <script>
+        var cid = location.search.split("=")[1];
+        $(function () {
+            var QUERY_PRODUCT_CATID_URL = "http://localhost:8080/pet/querybycid/" + cid;
+            $.ajax({
+                url: QUERY_PRODUCT_CATID_URL,
+                dataType: "text json",
+                type: "get",
+                statusCode: {
+                    200: function (data) {
+                        var pro = $("#pro")
+                        var s = "";
+                        $(data).each(function (index, val) {
+                            s+="<tr bgcolor='#FFFF88'>" +
+                                "<td><a href='items.html?pid="+val.productid+"'>"+val.productno+"</a> </td>"+
+                                "<td>"+val.name+"</td>"+
+                                "<td>"+val.descn+"</td>"+
+                                "<td><img src='../images/"+val.pic+"'></td>"+
+                                "</tr>"
+
+                        });
+                        $("#pro>tbody").append(s);
+                    }
+
+                }
+
+
+            })
+
+
+        })
+
+
+    </script>
+</head>
+<body>
+<div id="top">
+
+</div>
+<table align="left" bgcolor="#008800" border="0" cellspacing="2"
+       cellpadding="2">
+    <tr>
+        <td bgcolor="#FFFF88">
+            <a href="main.html"><b><font color="BLACK" size="2">&lt;&lt; 主菜单</font>
+            </b></a>
+        </td>
+    </tr>
+</table>
+
+<p>
+<center>
+    <h2>
+
+    </h2>
+</center>
+<table align="center" bgcolor="#008800" border="0" cellspacing="2"
+       cellpadding="3" id="pro">
+    <tbody>
+    <tr bgcolor="#CCCCCC">
+        <td>
+            产品编号
+        </td>
+        <td>
+            产品名称
+        </td>
+        <td>
+            描述
+        </td>
+        <td>
+            图片
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

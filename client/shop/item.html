@@ -1,0 +1,145 @@
+<html>
+<head>
+	<TITLE></TITLE>
+	<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/top.js"></script>
+	<script src="../js/verify.js"></script>
+	<script>
+        var s1 = location.search.split("&")[0];//iid=?&pid=?
+        var s2 = location.search.split("&")[1];
+        var iid = s1.split("=")[1];
+        var pid = s2.split("=")[1];
+
+        $(function () {
+            var QUERY_ITEM_BY_IID_URL = "http://localhost:8080/pet/querybyiid/"+iid+"/"+pid;
+            $.ajax({
+                url:QUERY_ITEM_BY_IID_URL,
+                dataType:"text json",
+                type:"get",
+                statusCode:{
+                    200:function (data) {
+                        $("#itemno").html(data.itemno),
+                        $("#itemid").val(data.itemid),
+                        $("#productno").html(data.product.productno),
+                        $("#price").html(data.listprice),
+                        $("#descn").html(data.attr1+","+data.product.descn),
+                        $("#pic").attr("src","../images/"+data.product.pic)
+                    }
+                }
+            })
+        })
+	</script>
+</head>
+<body>
+<div id="top"></div>
+
+<table align="left" bgcolor="#008800" border="0" cellspacing="2"
+	cellpadding="2">
+	<tr>
+		<td bgcolor="#FFFF88">
+			<a href="main.html"><b><font color="BLACK" size="2">&lt;&lt; 主菜单</font>
+			</b></a>
+		</td>
+	</tr>
+</table>
+
+<p>
+<table align="center" bgcolor="#008800" cellspacing="2" cellpadding="3"
+		border="0" width="60%">
+		<tr bgcolor="#FFFF88">
+			<td bgcolor="#FFFFFF">
+				<image id="pic"></image>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFF88">
+			<td width="100%" bgcolor="#cccccc">
+				<span id="itemno"></span>
+				<input type="hidden" id="itemid">
+			</td>
+		</tr>
+		<tr bgcolor="#FFFF88">
+			<td>
+				<b><font size="4">
+					<span id="productno"></span>
+
+				</font>
+				</b>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFF88">
+			<td>
+				<font size="3"><i>
+					<span id="price"></span>
+				</i>
+				</font>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFF88">
+			<td>
+				<span id="descn"></span>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFF88">
+			<td>
+				<input type="number" max="100" min="1" id="quantity" value="1">
+			</td>
+		</tr>
+
+		<tr bgcolor="#FFFF88">
+			<td>
+				<input type="image" src="../images/button_add_to_cart.gif" id="add"/>
+
+			</td>
+		</tr>
+	</table>
+<script>
+    $("#add").click(function(){
+        var QUERY_COOKIE_URL="http://localhost:8080/account/queryCookie";
+        $.ajax({
+            url:QUERY_COOKIE_URL,
+            type:"get",
+            dataType:"text",
+            statusCode:{
+                200:function(data){
+                    //alert(data)//"-1"
+                    if(data.indexOf("-1")<0){//顾客
+                        var PUT_CART_URL = "http://localhost:8080/cart/put/" + iid+"/" + q;
+                        $.ajax({
+                            url: PUT_CART_URL,
+                            type: "put",//RESTful get post delete put
+                            statusCode: {
+                                200: function (data) {
+                                    window.location="cart.html";
+                                }
+                            }
+                        });
+                    }else{
+                        window.location="login.html";
+                        return;
+                    }
+                }
+            }
+        });
+        var ADD_CART_URL = "http://localhost:8080/cart/add";
+        var cart={
+            "itemid":$("#itemid").val(),
+            "quantity":$("#quantity").val()
+        }
+        $.ajax({
+            url: ADD_CART_URL,
+            dataType: "text json",
+            data:JSON.stringify(cart),
+            contentType:"application/json",
+            type: "post",
+            statusCode: {
+                200: function (data) {
+                    window.location="cart.html";
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

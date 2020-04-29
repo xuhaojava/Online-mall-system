@@ -1,0 +1,81 @@
+<html>
+<head>
+	<TITLE></TITLE>
+	<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/top.js"></script>
+<script>
+	$(function () {
+		$("#myok").click(function () {
+		    var username=$("#username").val()
+			var password=$("#pwd").val()
+			if(username==""||username.length<=0){
+				alert("用户名不能为空")
+				return;
+			}
+			if(password==""||password.length<=0){
+				alert("密码不能为空")
+				return;
+			}
+		    var LOGIN_URL="http://localhost:8080/account/login"
+			var d={
+				"username":username,
+				"password":password,
+			}
+			$.ajax({
+				url:LOGIN_URL,
+				type:"post",
+				dataType:"text json",
+				data:JSON.stringify(d),
+				contentType:"application/json",//前端向后端传输的数据是json类型
+				statusCode:{
+				    200:function (data) {
+				        window.location="main.html?name="+data.username;
+                    },
+					404:function () {
+						alert("登陆失败！")
+                    }
+				}
+			})
+        })
+    })
+
+
+
+</script>
+</head>
+<body>
+	<div id="top"></div>
+	<table align="center" border="0">
+		<tr>
+			<td colspan="2">
+				
+				<br />
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			
+			<td>
+				用户名:<input type="text" name="username" id="username">
+			</td>
+		</tr>
+		<tr>
+			
+			<td>
+				密&nbsp;&nbsp;&nbsp;码:<input type="password" name="pwd" id="pwd">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				&nbsp;<input type="image" border="0" src="../images/button_submit.gif" id="myok"/>
+				<a href="register.html"><img border="0" src="../images/button_register_now.gif" /></a>
+			</td>
+		</tr>
+	</table>
+
+<center>
+
+</center>
+</body>
+</html>
